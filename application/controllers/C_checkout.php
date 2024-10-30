@@ -42,8 +42,6 @@ class C_checkout extends CI_Controller {
         
     }
 
- 
-
     public function remove_from_carts() {
         if($this->M_checkout->delete_from_carts_by_id($this->input->get('carts'))){
             $this->session->set_flashdata('alertSuccess','Product success delete from cart'); 

@@ -71,61 +71,65 @@ class C_home extends CI_Controller {
         }
         
         $data['pagination'] = $this->pagination->create_links();
-
+        $this->session->set_flashdata('offset',$offset);
+        
         foreach($data['products'] as &$product){
-            $product['product_id'] = $this->encrypt_id($product['product_id']);
+            $product['product_id_hash'] = hash('sha256',$product['product_id']);
         }
-
+        
        
-
+        
         $this->load->view('template/header');
         $this->load->view('page/home/header');
         $this->load->view('components/ui/navbar_user');
         if(empty($this->input->get('search'))){
-        $this->load->view('components/content/jumbotron_user');
+            $this->load->view('components/content/jumbotron_user');
         }
         $this->load->view('components/content/product_list', $data);
         $this->load->view('components/ui/alert');
-
+        
         $this->load->view('page/home/footer');
         
         $this->load->view('template/footer');
     }
-
-    private function encrypt_id($id) {
-        return $this->encryption->encrypt($id);
-    }
-    private function decrypt_id($id) {
-        return $this->encryption->decrypt($id);
-    }
+    
+    
     
     public function detail_product() {
-
+        
         $input_id = $this->input->get('detail');
+        
+        
+        
+        
+        
+        // $data['products']= $this->M_product->get_products_is_sale_by_id();
+        $data['products'] = $this->M_product->get_products(8,$this->session->flashdata('offset'));
+        
 
-        $decrypt_id = $this->decrypt_id($input_id);
+        if($data['products']){
 
-        if($decrypt_id == false){
-            redirect('');
-            return;
-        }else{
-
-            $data['products']= $this->M_product->get_products_is_sale_by_id($decrypt_id);
-
-            if($data['products']){
-                
-                $this->load->view('template/header');
-                $this->load->view('page/home/header');
-                $this->load->view('components/ui/navbar_user');
-                $this->load->view('components/content/detail_product',$data);
-                $this->load->view('components/ui/alert');
-                $this->load->view('page/home/footer');  
-                $this->load->view('template/footer');
-            }else{
-                $this->session->set_flashdata('alertError','Failed To Fetch Product');
+            foreach( $data['products'] as &$product){
+                $product['product_id_hash'] = hash('sha256',$product['product_id'] );
+                if($product['product_id_hash'] === $input_id ){
+                    $data['matched_product'] = $product;
+                    break;
+                }
             }
-            return;
+
+            
+            $this->load->view('template/header');
+            $this->load->view('page/home/header');
+            $this->load->view('components/ui/navbar_user');
+            $this->load->view('components/content/detail_product',$data);
+            $this->load->view('components/ui/alert');
+            $this->load->view('page/home/footer');  
+            $this->load->view('template/footer');
+        }else{
+            $this->session->set_flashdata('alertError','Failed To Fetch Product');
         }
+        
+        
         
     }
     

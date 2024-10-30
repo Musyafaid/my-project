@@ -130,10 +130,11 @@ class C_dashboard extends CI_Controller {
                 $data['products'] = $this->M_product->get_all_products_by_id($config['per_page'], $offset,null,$this->session->userdata('sellerId'));
             }
             
-            // foreach($data['products'] as &$product){
-            //     $product['product_id'] = $this->encrypt_id($product['product_id']);
-            // }
+            foreach($data['products'] as &$product){
+                $product['product_id_hash'] = hash('sha256',$product['product_id']);
+            }
 
+            $this->session->set_userdata('offset',$offset);
             $data['pagination'] = $this->pagination->create_links();
             
             $data['title'] = "Seller Dashboard";
@@ -153,79 +154,90 @@ class C_dashboard extends CI_Controller {
         
     }
 
-    private function encrypt_id($id) {
-        return $this->encryption->encrypt($id);
-    }
-    private function decrypt_id($id) {
-        return $this->encryption->decrypt($id);
-    }
-    
+
     public function update_product() {
 
         $input_id = $this->input->get('product');
 
-        $decrypt_id = $this->decrypt_id($input_id);
         $data['uri_segment'] = $this->session->flashdata('uriSegment');
-        // if($decrypt_id == false){
-            
-        //     redirect('dashboard/product/'. $data['uri_segment'] );
-        //     return;
-        // }else{
-
         
-            $data['products'] = $this->M_product->get_product_by_id($decrypt_id);
-            
-            if(empty($this->M_product->get_category())){
-                echo "Gagal mendapatkan category";
-            }
-            
-            $data['categories'] = $this->M_product->get_category();
-            
-            
-            if($data['products']){
-                $this->product();
-                $this->load->view('components/content/form_update',$data);
-                $data_product = $this->input->post();
-                if($data_product){
-                    $config['upload_path'] = './public/image/uploads/products/';
-                    $config['allowed_types'] = 'gif|jpg|png';
-                    $config['max_size']     = '1000';
-                    $config['max_width'] = '10240';
-                    $config['max_height'] = '10000';
+        $data['products'] = $this->M_product->get_all_products_by_id(5, $this->session->userdata('offset'),null,$this->session->userdata('sellerId'));
+        
+        if(empty($this->M_product->get_category())){
+            echo "Gagal mendapatkan category";
+        }
+        
+        $data['categories'] = $this->M_product->get_category();
+        $this->product();
+        
+        
+        if($data['products']){
 
-                    $this->load->library('upload', $config);
-                    
-                    $this->upload->initialize($config);
-                    if ( ! $this->upload->do_upload('product_image')){
-
-
-                        $this->update_data_product($product_id,$data_product);
-                        echo"error";
-                    
-                    }else{
-                        $upload_data = $this->upload->data();
-                    
-                        $hash = md5_file($upload_data['full_path']); 
-                        $new_file_name = $hash . $upload_data['file_ext']; 
-                        
-                        rename($upload_data['full_path'], $upload_data['file_path'] . $new_file_name);
-
-                        $data_product['product_image'] = $new_file_name;
-
-                        
-
-                        $this->update_data_product($product_id,$data_product);
-
-                    }
-                    
+            foreach ($data['products'] as &$product) {
+                $product['product_id_hash'] = hash('sha256', $product['product_id']);
+                
+                // If this product matches the requested ID
+                if ($input_id === $product['product_id_hash']) {
+                    $found = true;
+                    $data['matched_product'] = $product;
+                    $product_id = $product['product_id'];
+                    $this->load->view('components/content/form_update', $data);
                 }
-            }else{
-                $this->session->set_flashdata('alertError','Failed fecth data');
+                $data_product = $this->input->post();
+
+                    if($data_product){
+                        $config['upload_path'] = './public/image/uploads/products/';
+                        $config['allowed_types'] = 'gif|jpg|png';
+                        $config['max_size']     = '1000';
+                        $config['max_width'] = '10240';
+                        $config['max_height'] = '10000';
+        
+                        $this->load->library('upload', $config);
+                        
+                        $this->upload->initialize($config);
+                        if ( ! $this->upload->do_upload('product_image')){
+        
+        
+                            $this->update_data_product($product_id,$data_product);
+                            echo"error";
+                        
+                        }else{
+                            $upload_data = $this->upload->data();
+                        
+                            $hash = md5_file($upload_data['full_path']); 
+                            $new_file_name = $hash . $upload_data['file_ext']; 
+                            
+                            rename($upload_data['full_path'], $upload_data['file_path'] . $new_file_name);
+        
+                            $data_product['product_image'] = $new_file_name;
+        
+                            
+        
+                            $this->update_data_product($product_id,$data_product);
+        
+                        }
+                        
+                    }
             }
-            // return;
-        // }
+            
+            // foreach ($data['products'] as &$product) {
+            //     $product['product_id_hash'] = hash('sha256', $product['product_id']);
+            //     if ($input_id === $product['product_id_hash']) {
+            //         $data['matched_product'] = $product;
+            //         var_dump( $data['matched_product']);
+            //         $product_id = $product['product_id'];
+                    
+            //         break;
+            //     }
+            // }
+
+          
+        }else{
+            $this->session->set_flashdata('alertError','Failed fecth data');
+        }
         
         
+        return;
     }
     
     private function update_data_product($product_id,$data_product){

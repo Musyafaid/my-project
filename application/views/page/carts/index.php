@@ -71,10 +71,10 @@
                                         <div class="item-description text-muted mb-2"><?= htmlspecialchars($product['description']) ?></div>
                                         <div class="item-price fs-5 mb-2">Rp <?= number_format($product['price'], 0, ',', '.') ?></div>
                                         <div class="quantity-controls d-flex align-items-center">
-                                            <button class="quantity-btn btn btn-outline-secondary btn-sm">-</button>
-                                            <input type="number" class="quantity-input form-control form-control-sm mx-2" 
+                                            <button class="quantity-btn btn btn-outline-secondary btn-sm"  onclick="decrement()">-</button>
+                                            <input type="number" class="quantity-input form-control form-control-sm mx-2" id="<?= $product['cart_items_id'] ?>" 
                                                    value="<?= htmlspecialchars($product['quantity']) ?>" min="1">
-                                            <button class="quantity-btn btn btn-outline-secondary btn-sm">+</button>
+                                            <button class="quantity-btn btn btn-outline-secondary btn-sm" onclick="increment()">+</button>
                                         </div>
                                     </div>
                                     <div class="col-auto">

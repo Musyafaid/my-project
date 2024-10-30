@@ -53,7 +53,7 @@
 
                                 <td class="text-center">
                                     <div class="btn-group gap-1">
-                                        <a   href="<?= base_url('dashboard/product/update?product=' . $product['product_id']) ?>"
+                                        <a   href="<?= base_url('dashboard/product/update?product=' . $product['product_id_hash']) ?>"
                                             class="btn btn-sm btn-warning" title="Edit">
                                             <i class="bi bi-pencil"></i> Edit
                                         </a>   

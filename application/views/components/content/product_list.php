@@ -2,7 +2,7 @@
   <div class="row g-4">
     <?php foreach($products as $product) : ?>
     <div class="col-6 col-md-4 col-lg-3">
-      <a href="<?= base_url('home/product/detail?detail='. $product['product_id']) ?>" class="text-decoration-none">
+      <a href="<?= base_url('home/product/detail?detail='. $product['product_id_hash']) ?>" class="text-decoration-none">
         <div class="card h-100 border-0 shadow-sm">
           <div class="position-relative overflow-hidden">
             <img

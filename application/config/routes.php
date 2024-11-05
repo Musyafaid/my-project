@@ -69,7 +69,9 @@ $route['seller/login'] = 'C_auth_seller/login';
 $route['dashboard/logout'] = 'C_dashboard/logout';
 
 $route['checkout/carts'] = 'C_checkout/carts';
-$route['checkout/remove'] = 'C_checkout/remove_from_carts';
+$route['checkout/carts/update'] = 'C_checkout/update_carts';
+$route['checkout/remove'] = 'C_checkout/remove_carts';
+$route['checkout/buy'] = 'C_checkout/buy';
 
 
 $route['user/register'] = 'C_auth_user/user_register';

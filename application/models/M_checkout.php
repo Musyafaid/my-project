@@ -17,6 +17,7 @@ class M_checkout extends CI_model {
                 cart_items.price,
                 SUM(cart_items.quantity * cart_items.price) AS total_price,
                 product.product_name,
+                product.product_id,
                 product.product_image,
                 product.description,
                 seller.shop_name
@@ -43,10 +44,34 @@ class M_checkout extends CI_model {
         ", array($user_id))->result_array();
     }
 
+    public function increment($cart_items_id) {
+        if(!$cart_items_id) return 0;
+    
+        $this->db->set('quantity', 'quantity + 1', FALSE);
+        $this->db->where('cart_items_id', $cart_items_id);
+        $this->db->update('cart_items');
+        
+        return $this->db->affected_rows();
+    }
+    public function decrement($cart_items_id) {
+        if(!$cart_items_id) return 0;
+    
+        $this->db->set('quantity', 'quantity - 1', FALSE);
+        $this->db->where('cart_items_id', $cart_items_id);
+        $this->db->update('cart_items');
+        
+        return $this->db->affected_rows();
+    }
+
     public function delete_from_carts_by_id($cart_items_id) {
         $this->db->where('cart_items_id',$cart_items_id);
         $this->db->delete('cart_items');
         return $this->db->affected_rows();
+    }
+
+    public function buy($user_Id) {
+        $this->db->where('user_id', $user_Id);
+        return $this->db->delete('carts');
     }
     
 }   

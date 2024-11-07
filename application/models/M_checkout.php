@@ -1,17 +1,27 @@
 <?php 
 class M_checkout extends CI_model {
-    public function add_to_cart($user_id,$data_carts) {
-        $this->db->insert('carts',array('user_id' => $user_id));
+    public function add_to_cart($data_carts,$data_carts_items) {
+        $this->db->insert('carts',$data_carts);
         $last_id = $this->db->insert_id();
-        $data_carts['cart_id'] = $last_id;
-        return $this->db->insert('cart_items',$data_carts);
+        $data_carts_items['cart_id'] = $last_id;
+        return $this->db->insert('cart_items',$data_carts_items);
 
     }
+
+    public function insert_order_detail() {
+    
+    }
+
+    public function insert_order($data) {
+        return $this->db->insert('order_table',array('user_id' => $data));
+    }
+
 
     public function get_all_carts_by_id($user_id) {
         return $this->db->query("
             SELECT 
                 carts.user_id,
+                carts.seller_id,
                 cart_items.cart_items_id,
                 cart_items.quantity,
                 cart_items.price,
@@ -69,9 +79,28 @@ class M_checkout extends CI_model {
         return $this->db->affected_rows();
     }
 
+    public function insert_shipping_address($data) {
+        return $this->db->insert('shipping_address',$data);
+    }
+
+    public function get_shipping_address($user_id){
+        return $this->db->get_where('shipping_address',array('user_id' => $user_id))->result_array();
+    }
+
     public function buy($user_Id) {
         $this->db->where('user_id', $user_Id);
         return $this->db->delete('carts');
     }
+
+    public function decrease_stock($product_id,$quantity) {
+        $this->db->set('product_stock', 'product_stock-'.$quantity.'', FALSE); 
+        $this->db->where('product_id', $product_id);
+        $this->db->update('product'); 
+        if ($this->db->affected_rows() > 0) {
+            return true; 
+        }
+    }
+
+   
     
 }   

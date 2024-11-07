@@ -116,103 +116,115 @@
             <div class="modal-header">
                 <h1 class="modal-title fs-5" id="exampleModalLabel">Alamat Penerima</h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
+            </div>
+            <div class="p-2">
+                <form action="">
+                    <select name="" id="" class="form-control">
+                        <option value="">akjjx</option>
+                        <option value="">akjjx</option>
+                        <option value="">akjjx</option>
+                        <option value="">akjjx</option>
+                    </select>
+                </form>
+            </div>
+
+            <button class="btn btn-success"></button>
             <form method="post" action="<?= base_url('checkout/buy/')?>">
                     <div class="modal-body">
-                                <div class="card-body d-flex justify-content-center gap-4">
-                                    <div class="w-50">
-                                        <div class="mb-2">
-                                            <label for="name" class="form-label">Nama Penerima</label>
-                                            <input type="text" class="form-control" name="name" >
-                                            <?php if(validation_errors()) : ?>
-                                                <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('city_id'); ?></small>
-                                            <?php endif ; ?>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="name" class="form-label">Nomer Penerima</label>
-                                            <input type="number_format" class="form-control" name="num_phone" >
-                                            <?php if(validation_errors()) : ?>
-                                                <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('city_id'); ?></small>
-                                            <?php endif ; ?>
-                                        </div>
-                                        <div class="mb-2">
-                                            <label for="province_id" class="form-label">Provinsi</label>
-                                            <select name="province_id" id="province_id" class="form-control">
-                                                <option value="">Pilih Provinsi</option>
-                                            </select>
-                                            <?php if(validation_errors()) : ?>
-                                                <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('province_id'); ?></small>
-                                            <?php endif ; ?>
-                                            
-                                        </div>
-
-                                        <div class="mb-2">
-                                            <label for="city_id" class="form-label">Kota/Kabupaten</label>
-                                            <select name="city_id" id="city_id" class="form-control" disabled>
-                                                <option value="">Pilih Kota</option>
-                                            </select>
-                                            <?php if(validation_errors()) : ?>
-                                                <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('city_id'); ?></small>
-                                            <?php endif ; ?>
-                                        </div>
-                                        
-                                        <div class="mb-2">
-                                            <label for="district_id" class="form-label">Kecamatan</label>
-                                            <select name="district_id" id="district_id" class="form-control" disabled>
-                                                <option value="">Pilih Kecamatan</option>
-                                            </select>
-                                            <?php if(validation_errors()) : ?>
-                                                <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('district_id'); ?></small>
-                                            <?php endif ; ?>
-                                        </div>
-                                        
-                                    
-                                    </div>
-                                    
-                                    <div class="w-50">
-                                    <div class="mb-2">
-                                            <label for="subdistrict_id" class="form-label">Kelurahan</label>
-                                            <select name="subdistrict_id" id="subdistrict_id" class="form-control" disabled>
-                                                <option value="">Pilih Kelurahan</option>
-                                            </select>
-                                            <?php if(validation_errors()) : ?>
-                                                <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('subdistrict_id'); ?></small>
-                                            <?php endif ; ?>
-                                        </div>
-                                                
-                                        <div class="mb-2">
-                                            <label for="postal_code" class="form-label">Kode Pos</label>
-                                            <input type="text" class="form-control" name="postal_code" id="postal_code" placeholder="Masukkan kode pos" disabled readonly>
-                                        </div>
-                                        
-                                        
-                                        <div class="mb-2">
-                                            <label for="catatan" class="form-label">Catatan (Optional)</label>
-                                            <input type="text" class="form-control" name="catatan" id="catatan" placeholder="Masukkan catatan">
-                                        </div>
-                                        
-                                        <div class="mb-2">
-                                            <label for="address" class="form-label">Alamat Lengkap</label>
-                                            <textarea class="form-control" name="address" id="address" rows="4" placeholder="Masukkan alamat lengkap"></textarea>
-                                            <?php if(validation_errors()) : ?>
-                                                <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('address'); ?></small>
-                                            <?php endif ; ?>
-                                        </div>
-                                        <!-- Hidden inputs for selected names and postal code -->
-                                        <input type="hidden" name="selected_province_name" id="selected_province_name">
-                                        <input type="hidden" name="selected_city_name" id="selected_city_name">
-                                        <input type="hidden" name="selected_district_name" id="selected_district_name">
-                                        <input type="hidden" name="selected_subdistrict_name" id="selected_subdistrict_name">
-                                        <input type="hidden" name="selected_postal_code" id="selected_postal_code">
-                                    </div>
+                        <div class="card-body d-flex justify-content-center gap-4">
+                            <div class="w-50">
+                                <div class="mb-2">
+                                    <label for="recipient_name" class="form-label">Nama Penerima</label>
+                                    <input type="text" class="form-control" id="recipient_name" name="recipient_name" >
+                                    <?php if(validation_errors()) : ?>
+                                        <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('city_id'); ?></small>
+                                    <?php endif ; ?>
                                 </div>
+                                <div class="mb-2">
+                                    <label for="recipient_phone" class="form-label">Nomer Penerima</label>
+                                    <input type="number_format" class="form-control" id="recipient_phone" name="recipient_phone" >
+                                    <?php if(validation_errors()) : ?>
+                                        <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('city_id'); ?></small>
+                                    <?php endif ; ?>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="province_id" class="form-label">Provinsi</label>
+                                    <select name="province_id" id="province_id" class="form-control">
+                                        <option value="">Pilih Provinsi</option>
+                                    </select>
+                                    <?php if(validation_errors()) : ?>
+                                        <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('province_id'); ?></small>
+                                    <?php endif ; ?>
+                                    
+                                </div>
+
+                                <div class="mb-2">
+                                    <label for="city_id" class="form-label">Kota/Kabupaten</label>
+                                    <select name="city_id" id="city_id" class="form-control" disabled>
+                                        <option value="">Pilih Kota</option>
+                                    </select>
+                                    <?php if(validation_errors()) : ?>
+                                        <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('city_id'); ?></small>
+                                    <?php endif ; ?>
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <label for="district_id" class="form-label">Kecamatan</label>
+                                    <select name="district_id" id="district_id" class="form-control" disabled>
+                                        <option value="">Pilih Kecamatan</option>
+                                    </select>
+                                    <?php if(validation_errors()) : ?>
+                                        <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('district_id'); ?></small>
+                                    <?php endif ; ?>
+                                </div>
+                                
                             
                             </div>
-                            <div class="modal-footer">
-                                <a href="<?= base_url('C_home/view_cart/') ?>" class="btn btn-danger">Batal</a>
-                                <button type="submit" class="btn btn-primary">Buy</button>
+                            
+                            <div class="w-50">
+                            <div class="mb-2">
+                                    <label for="subdistrict_id" class="form-label">Kelurahan</label>
+                                    <select name="subdistrict_id" id="subdistrict_id" class="form-control" disabled>
+                                        <option value="">Pilih Kelurahan</option>
+                                    </select>
+                                    <?php if(validation_errors()) : ?>
+                                        <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('subdistrict_id'); ?></small>
+                                    <?php endif ; ?>
+                                </div>
+                                        
+                                <div class="mb-2">
+                                    <label for="postal_code" class="form-label">Kode Pos</label>
+                                    <input type="text" class="form-control" name="postal_code" id="postal_code" placeholder="Masukkan kode pos" disabled readonly>
+                                </div>
+                                
+                                
+                                <div class="mb-2">
+                                    <label for="catatan" class="form-label">Catatan (Optional)</label>
+                                    <input type="text" class="form-control" name="catatan" id="catatan" placeholder="Masukkan catatan">
+                                </div>
+                                
+                                <div class="mb-2">
+                                    <label for="address" class="form-label">Alamat Lengkap</label>
+                                    <textarea class="form-control" name="address" id="address" rows="4" placeholder="Masukkan alamat lengkap"></textarea>
+                                    <?php if(validation_errors()) : ?>
+                                        <small class="m-1 text-danger position-absolute  my-0 mx-2 small"><?=  form_error('address'); ?></small>
+                                    <?php endif ; ?>
+                                </div>
+                                <!-- Hidden inputs for selected names and postal code -->
+                                <input type="hidden" name="selected_province_name" id="selected_province_name">
+                                <input type="hidden" name="selected_city_name" id="selected_city_name">
+                                <input type="hidden" name="selected_district_name" id="selected_district_name">
+                                <input type="hidden" name="selected_subdistrict_name" id="selected_subdistrict_name">
+                                <input type="hidden" name="selected_postal_code" id="selected_postal_code">
                             </div>
-                        </form>
+                        </div>
+                    
+                    </div>
+                    <div class="modal-footer">
+                        <a href="<?= base_url('C_home/view_cart/') ?>" class="btn btn-danger">Batal</a>
+                        <button type="submit" class="btn btn-primary">Buy</button>
+                    </div>
+            </form>
             </div>
         </div>
     </div>

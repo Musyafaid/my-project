@@ -22,6 +22,7 @@
                     <form action="<?= base_url('C_checkout/add_to_cart/') ?>" method="post">
                         <input class="visually-hidden" type="text"  name="product_id" value="<?= $matched_product['product_id'] ?>" >
                         <input class="visually-hidden" type="number"  name="price" value="<?= $matched_product['product_price'] ?>" >
+                        <input class="visually-hidden" type="number"  name="seller_id" value="<?= $matched_product['seller_id'] ?>" >
                         <div class="mb-4">
                             <label class="form-label">Jumlah:</label>
                             <div class="input-group" style="width: 150px;">

@@ -3,7 +3,7 @@ class C_dashboard extends CI_Controller {
 
     public function __construct() {
         parent::__construct();
-        if($this->session->userdata('isLogin') === false || empty($this->session->userdata('isLogin')) ){
+        if($this->session->userdata('isLogin') === false || empty($this->session->userdata('isLogin')) || empty($this->session->userdata('sellerId'))){
             redirect('seller/login');
         }
         $this->load->model('M_product');

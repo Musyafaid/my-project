@@ -8,7 +8,7 @@
   </head>
   <body>
 
-    <form id="payment-form" method="post" action="<?=site_url()?>">
+    <form id="payment-form" method="post" >
       <input type="hidden" name="result_type" id="result-type" value="">
       <input type="hidden" name="result_data" id="result-data" value="">
     </form>
@@ -33,6 +33,7 @@
           changeResult('success', result);
           console.log(result.status_message);
           $("#payment-form").submit();
+          window.location.href = '<?= site_url() ?>checkout/success';
         },
         onPending: function(result) {
           changeResult('pending', result);

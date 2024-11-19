@@ -8,12 +8,17 @@ class M_checkout extends CI_model {
 
     }
 
-    public function insert_order_detail() {
-    
+
+    public function insert_order_detail($data_detail) {
+		
+	
+		return $this->db->insert('order_detail',$data_detail);
+		
     }
 
     public function insert_order($data) {
-        return $this->db->insert('order_table',array('user_id' => $data));
+		$this->db->insert('order_table',array('user_id' => $data));
+        return $this->db->insert_id();
     }
 
 
@@ -21,6 +26,7 @@ class M_checkout extends CI_model {
         return $this->db->query("
             SELECT 
                 carts.user_id,
+                carts.cart_id,
                 carts.seller_id,
                 cart_items.cart_items_id,
                 cart_items.quantity,
@@ -54,6 +60,20 @@ class M_checkout extends CI_model {
         ", array($user_id))->result_array();
     }
 
+	public function checking_cart($product_id) {
+		$this->db->select('cart_items_id');
+		$this->db->where('product_id', $product_id);
+		$query = $this->db->get('cart_items');
+		
+		$result = $query->result_array();
+		$count = $query->num_rows();
+		
+		return [
+			'cart_items_id' => $result,
+			'count' => $count
+		];
+	}
+	
     public function increment($cart_items_id) {
         if(!$cart_items_id) return 0;
     
@@ -63,6 +83,7 @@ class M_checkout extends CI_model {
         
         return $this->db->affected_rows();
     }
+
     public function decrement($cart_items_id) {
         if(!$cart_items_id) return 0;
     
@@ -73,11 +94,13 @@ class M_checkout extends CI_model {
         return $this->db->affected_rows();
     }
 
-    public function delete_from_carts_by_id($cart_items_id) {
-        $this->db->where('cart_items_id',$cart_items_id);
-        $this->db->delete('cart_items');
+    public function delete_from_carts_by_id($carts_id) {
+		$this->db->where('cart_id',$carts_id);
+        $this->db->delete('carts');
+        
         return $this->db->affected_rows();
     }
+
 
     public function insert_shipping_address($data) {
         return $this->db->insert('shipping_address',$data);
@@ -85,6 +108,10 @@ class M_checkout extends CI_model {
 
     public function get_shipping_address($user_id){
         return $this->db->get_where('shipping_address',array('user_id' => $user_id))->result_array();
+    }
+	
+    public function get_shipping_address_by_id($shipping_id){
+        return $this->db->get_where('shipping_address',array('address_id' => $shipping_id))->result_array();
     }
 
     public function buy($user_Id) {

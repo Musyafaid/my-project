@@ -73,6 +73,7 @@ $route['checkout/carts/update'] = 'C_checkout/update_carts';
 $route['checkout/remove'] = 'C_checkout/remove_carts';
 $route['checkout/buy'] = 'C_checkout/buy';
 $route['checkout/success'] = 'C_checkout/success';
+$route['checkout/address'] = 'C_checkout/shipping_address';
 
 
 $route['user/register'] = 'C_auth_user/user_register';

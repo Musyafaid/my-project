@@ -18,7 +18,6 @@
     $(document).ready(function () {
       var snapToken = '<?= $snapToken ?>'; 
 
-      console.log('token = ' + snapToken);
       
       var resultType = document.getElementById('result-type');
       var resultData = document.getElementById('result-data');

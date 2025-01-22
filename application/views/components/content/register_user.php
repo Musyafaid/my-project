@@ -43,7 +43,7 @@
                             <div class="d-grid">
                                 <button type="submit" class="btn btn-success">Register as user</button>
                             </div>
-                            <a href="<?= base_url('user/login/') ?>">Have a account?clik here..</a>
+                            <a href="<?= base_url('user/login/') ?>">Have a account ? clik here..</a>
                         </form>
                     </div>
                 </div>

@@ -3,12 +3,20 @@ class C_home extends CI_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->model('M_product');
+        $this->load->model('M_checkout');
         $this->load->library('pagination');   
         $this->load->library('encryption');   
+
+		if($this->session->userdata('isLogin') || !empty($this->session->userdata('isLogin')) || !empty($this->session->userdata('userId')) || $this->session->userdata('role') == 'user' ){
+			$this->session->set_userdata('userCarts',$this->M_checkout->count_all_carts_by_id($this->session->userdata('userId')));
+		}	
+
+		
     }
 
     public function index($offset = 0) {
 
+		
         $search = $this->input->get('search');
 
           
@@ -91,7 +99,7 @@ class C_home extends CI_Controller {
         $this->load->view('page/home/footer');
         
         $this->load->view('template/footer');
-    }
+}
     
     
     
@@ -113,9 +121,11 @@ class C_home extends CI_Controller {
                 $product['product_id_hash'] = hash('sha256',$product['product_id'] );
                 if($product['product_id_hash'] === $input_id ){
                     $data['matched_product'] = $product;
+					// var_dump(    $data['matched_product'] = $product);
                     break;
                 }
             }
+			
 
             
             $this->load->view('template/header');
@@ -132,5 +142,11 @@ class C_home extends CI_Controller {
         
         
     }
+
+	public function logout() {
+       
+		$this->session->sess_destroy();
+		 redirect('user/login/');
+		}
     
 }

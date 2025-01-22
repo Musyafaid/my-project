@@ -21,11 +21,11 @@
                                 <label class="form-check-label" for="rememberMe">Remember me</label>
                             </div>
                             <div class="d-grid">
-                                <button type="submit" class="btn btn-primary">Login</button>
+                                <button type="submit" class="btn btn-dark">Login</button>
                             </div>
                             <div class="text-center mt-3">
-                                <a href="#" class="text-decoration-none">Forgot password?</a><br>
-                                 <a href="<?= base_url('seller/register/') ?>" class="text-decoration-none">Dont Have An Account ? Click here...</a>
+                                <!-- <a href="#" class="text-black text-decoration-none">Forgot password?</a><br> -->
+                                 <a href="<?= base_url('seller/register/') ?>" class="text-black text-decoration-none">Don't have an account ? Click here..</a>
                             </div>
                         </form>
                     </div>

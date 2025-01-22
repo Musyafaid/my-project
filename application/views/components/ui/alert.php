@@ -45,8 +45,11 @@
             cancelButtonText: 'Cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                // Redirect to the logout endpoint or perform logout action
-                window.location.href = '<?= base_url('dashboard/logout/') ?>'; // Change to your logout URL
+               <?php if($this->session->userdata('role') == 'admin') : ?>
+				window.location.href = '<?= base_url('admin/logout') ?>'; // Change to your logout URL
+				<?php else : ?>
+					window.location.href = '<?= base_url('dashboard/logout/') ?>'; // Change to your logout URL
+				<?php endif ; ?>
             }
         });
     }

@@ -32,12 +32,47 @@
                 <div class="nav-item d-flex align-items-center gap-1">
                     <img height="60" src="<?= base_url('public/image/seller/profile.png') ?>" alt="">
                     <div class="d-flex flex-column justify-content-center">
-                        <h5 class="text-md-start p-0 m-0">Musyafa Achmad</h5>
+                        <h5 class="text-md-start p-0 m-0"><?= $name ?></h5>
                         <small class=" p-0 m-0 fst-italic" style="font-size: smaller ;"><?= $this->session->userdata('sellerShop') ?></small>
-                        <p class="p-0 m-0" style="font-size: smaller ;"><?= $this->session->userdata('sellerEmail') ?></p>
+                        <p class="p-0 m-0" style="font-size: smaller ;"><?= $email ?></p>
                     </div>
                 </div>
             </div>
+			<?php if($this->session->userdata('role') == 'admin') : ?>
+				<ul class="nav flex-column">
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="<?= base_url('admin/dashboard/') ?>">
+                        <i class="fas fa-home me-2"></i> Dashboard
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="<?= base_url('admin/dashboard/category/') ?>">
+                        <i class="fa-solid fa-box me-2"></i> Category
+                    </a>
+                </li>
+                <!-- <li class="nav-item">
+                    <a class="nav-link text-white" href="#">
+                        <i class="fas fa-chart-bar me-2"></i> Analytics
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link text-white" href="#">
+                        <i class="fas fa-cog me-2"></i> Settings
+                    </a>
+                </li> -->
+				<li class="nav-item">
+                    <a class="nav-link text-white" href="#">
+                        <i class="fas fa-chart-bar me-2"></i> Sub Category
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <button class="nav-link text-white" onclick="confirmLogout()">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </button>
+                </li>
+            </ul>
+
+			<?php else : ?>
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link text-white" href="<?= base_url('dashboard/') ?>">
@@ -49,36 +84,36 @@
                         <i class="fa-solid fa-box me-2"></i> Product
                     </a>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link text-white" href="#">
-                        <i class="fas fa-chart-bar me-2"></i> Analytics
+				<li class="nav-item">
+                    <a class="nav-link text-white"  href="<?= base_url('dashboard/order') ?>">
+                        <i class="fas fa-chart-bar me-2"></i> Order
                     </a>
                 </li>
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a class="nav-link text-white" href="#">
                         <i class="fas fa-cog me-2"></i> Settings
                     </a>
-                </li>
+                </li>  -->
+			
                 <li class="nav-item">
                     <button class="nav-link text-white" onclick="confirmLogout()">
                         <i class="fas fa-sign-out-alt me-2"></i> Logout
                     </button>
                 </li>
             </ul>
+			<?php endif ; ?> 
         </div>
     </div>
 
-    <!-- Main Content -->
+
   
 
     <script>
         document.getElementById('toggleSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.toggle('collapsed');
-            // document.getElementById('content').classList.toggle('expanded');
         });
 
         document.getElementById('closeSidebar').addEventListener('click', function() {
             document.getElementById('sidebar').classList.add('collapsed');
-            // document.getElementById('content').classList.add('expanded');
         });
     </script>

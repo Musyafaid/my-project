@@ -87,7 +87,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a href="<?= base_url('checkout/carts/') ?>" class="btn btn-danger">Batal</a>
+                    <a href="<?= base_url('checkout') ?>" class="btn btn-danger">Batal</a>
                     <button type="submit" class="btn btn-primary">Buy</button>
                 </div>
             </form>

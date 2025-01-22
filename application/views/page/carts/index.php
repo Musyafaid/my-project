@@ -90,7 +90,7 @@
 	<div class="cart-container row">
 		<div class="cart-items col-lg-8">
 			<?php if(!$products) : ?>
-				<h5 class="w-100 bg-warning bg-opacity-75 px-5 py-3 rounded">Belum Ada Carts</h5>
+				<h5 class="w-100 bg-warning bg-opacity-75 px-5 py-3 rounded">Belum Ada Keranjang</h5>
 			<?php endif ; ?>
 			<?php 
 			$shopGroups = [];
@@ -119,10 +119,10 @@
 									<div class="item-description text-muted mb-2"><?= htmlspecialchars($product['description']) ?></div>
 									<div class="item-price fs-5 mb-2">Rp <?= number_format($product['price'], 0, ',', '.') ?></div>
 									<div class="quantity-controls d-flex align-items-center">
-									<a href="<?= base_url('checkout/carts/update?decrement='.$product['cart_items_id_hash']) ?>" class="quantity-btn btn btn-outline-secondary btn-sm" data-action="decrement">-</a>
+									<a href="<?= base_url('checkout/update?decrement='.$product['cart_items_id_hash']) ?>" class="quantity-btn btn btn-outline-secondary btn-sm" data-action="decrement">-</a>
 									<input type="number" disabled class="quantity-input form-control form-control-sm mx-2" 
 										value="<?= htmlspecialchars($product['quantity']) ?>" min="1" data-quantity-input>
-									<a href="<?= base_url('checkout/carts/update?increment='.$product['cart_items_id_hash']) ?>" class="quantity-btn btn btn-outline-secondary btn-sm" data-action="increment">+</a>
+									<a href="<?= base_url('checkout/update?increment='.$product['cart_items_id_hash']) ?>" class="quantity-btn btn btn-outline-secondary btn-sm" data-action="increment">+</a>
 
 									</div>
 								</div>

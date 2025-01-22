@@ -60,9 +60,9 @@
                                     <button onclick="confirmaction(<?= $product['product_id'] ?>,<?= $product['is_sale'] ?>) " class="btn btn-sm btn-dark" title="Record Sale">
                                             <i class="bi bi-cart-plus"></i> Status
                                         </button>
-                                        <a class="btn btn-sm btn-success" title="Record Sale">
+                                        <!-- <a class="btn btn-sm btn-success" title="Record Sale">
                                             <i class="bi bi-cart-plus"></i> Record Sale
-                                        </a>
+                                        </a> -->
                                     </div>
                                 </td>
                             </tr>

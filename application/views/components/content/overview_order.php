@@ -13,9 +13,9 @@ $dataPoints = array(
 ?>
 
 <style>
-    th,td{
+    td{
         font-size: smaller;
-        text-align:center;
+		
     }      
 
     .canvasjs-chart-credit{
@@ -26,41 +26,40 @@ $dataPoints = array(
     <!-- Product Management -->
     <div class="col-md-6" >
         <div class="bg-white rounded shadow-sm p-4">
-            <h2 class="h5 mb-4">Product Management</h2>
+            <h2 class="h5 mb-4">Order Management</h2>
             <div class="table-responsive">
                 <table class="table" >
                     <thead>
                         <tr>
                             <th>Name</th>
+                            <th>Customer</th>
                   
-                            <th>Stock</th>
+                            <th>Total Price</th>
                             <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <?php foreach($products as $product) : ?>
-                        <tr >
-                            <td class=" w-50 text-truncate h-auto"><?= $product['product_name'] ?></td>
-                           
-                            <td class=" w-25 text-truncate h-auto"><?= $product['product_stock'] ?></td>
-                            <td class=" w-25 text-truncate h-auto" class="text-center">
-                                <?php if ($product['is_sale'] == 1): ?>
-                                        <i class="fas fa-check-circle" style="color: green;"></i> <!-- Success icon -->
-                                <?php else: ?>
-                                    <i class="fas fa-times-circle" style="color: red;"></i> <!-- "X" icon -->
-                                <?php endif; ?>
-                            </td>
-                        </tr>
+                        <?php foreach($orders as $order) : ?>
+							<tr class="order-row">
+								<td class="text-truncate h-auto " ><?= $order['product_name'] ?></td>
+								<td class="text-truncate h-auto " ><?= $order['user_name'] ?></td>
+								<td class="text-truncate h-auto " ><?= $order['total_price'] ?></td>
+								<td class="text-truncate h-auto " >
+							
+									<span class="status-text badge bg-success">	<i class="fa-solid fa-exclamation text-warning   px-1"></i><?= $order['latest_status'] ?></span>
+								</td>
+							</tr>
+
                         <?php endforeach ; ?>
                     </tbody>
                 </table>
 
-                <a href="<?= base_url('dashboard/product/') ?>">See all product..</a>
+                <a class="text-white btn btn-dark" href="<?= base_url('dashboard/order') ?>">All Orders</a>
             </div>
         </div>
     </div>
 
-    <div class="col-md-6">
+    <!-- <div class="col-md-6">
         <div class="bg-white rounded shadow-sm p-4">
             <h2 class="h5 mb-4">Income Overview</h2>
             
@@ -72,10 +71,10 @@ $dataPoints = array(
 
             
         </div>
-    </div>
+    </div> -->
 </div>
 
-<script>
+<!-- <script>
 window.onload = function() {
  
  
@@ -101,5 +100,5 @@ var chart = new CanvasJS.Chart("chartContainer", {
 chart.render();
  
 }
-</script>
+</script> -->
 

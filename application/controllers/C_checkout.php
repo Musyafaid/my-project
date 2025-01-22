@@ -14,7 +14,7 @@ class C_checkout extends CI_Controller {
     }
     
 
-    public function carts() {
+    public function index() {
             $data['products'] = $this->M_checkout->get_all_carts_by_id($this->session->userdata('userId'));
 
             foreach($data['products'] as &$product){
@@ -36,6 +36,8 @@ class C_checkout extends CI_Controller {
             
             $this->load->view('template/footer');
     }
+
+	
     
 
     public function add_to_cart() {
@@ -58,7 +60,7 @@ class C_checkout extends CI_Controller {
 				if ($this->M_checkout->increment( $check['cart_items_id'][0]['cart_items_id'])) {
 				
 					$this->session->set_flashdata('alertSuccess','Product success add to cart'); 
-					redirect('checkout/carts/');
+					redirect('checkout/');
 
 				}else{
 
@@ -71,11 +73,11 @@ class C_checkout extends CI_Controller {
 				
 				if($this->M_checkout->add_to_cart($data_carts,$data_carts_items)){
 					$this->session->set_flashdata('alertSuccess','Product success add to cart'); 
-					redirect('checkout/carts/');
+					redirect('checkout/');
 
 				}else{
 					$this->session->set_flashdata('alertError','Product failed add to cart');    
-					redirect('checkout/carts/');
+					redirect('checkout/');
 
 				}
 			}
@@ -115,10 +117,10 @@ class C_checkout extends CI_Controller {
                 $this->session->set_flashdata('alertError', 'Update failed');
             }
             
-            redirect('checkout/carts/');
+            redirect('checkout/');
         } else {
             $this->session->set_flashdata('alertError', 'Cart item not found');
-            redirect('checkout/carts/');
+            redirect('checkout/');
         }
     }
     
@@ -144,10 +146,10 @@ class C_checkout extends CI_Controller {
             
             if($this->M_checkout->delete_from_carts_by_id($carts_id)){
 				$this->session->set_flashdata('alertSuccess','Product success delete from cart'); 
-				redirect('checkout/carts/');
+				redirect('checkout/');
             }else{
                 $this->session->set_flashdata('alertError','Product failed delete from cart'); 
-				redirect('checkout/carts/');
+				redirect('checkout/');
 
             }
         }
@@ -156,7 +158,7 @@ class C_checkout extends CI_Controller {
     public function buy(){
 
 		$this->input->post('address_id');
-        $usr_id = 1;
+        $usr_id = $this->session->userdata('userId');
         $grossAmount = 0;
         $data['products'] = $this->M_checkout->get_all_carts_by_id($usr_id);
 
@@ -174,7 +176,7 @@ class C_checkout extends CI_Controller {
         
         // if($this->form_validation->run() == false){
         //     $this->session->set_flashdata('alertError','Please Insert The Shipping Adress');
-        //     redirect('checkout/carts/');
+        //     redirect('checkout/');
             
         // }else{
 			$this->session->set_flashdata('address_id',$this->input->post('address_id'));
@@ -258,12 +260,12 @@ class C_checkout extends CI_Controller {
             $snapToken = $this->midtrans->getSnapToken($transaction_data);
             if($snapToken){
 				if( empty($customer_details)){
-					redirect('checkout/carts/');
+					redirect('checkout/');
 				}
 				// var_dump($transaction_data);
                 $data['snapToken'] = $snapToken;
                 $this->load->view('checkout_snap', $data);
-				$this->carts();
+				$this->index();
                 
             }else{
                 error_log(json_encode($transaction_data));
@@ -285,7 +287,18 @@ class C_checkout extends CI_Controller {
     public function shipping_address() {
        
         $this->form_validation->set_rules('recipient_name', 'Name', 'required');
-        $this->form_validation->set_rules('recipient_phone', 'Phone Number', 'required');
+		$this->form_validation->set_rules(
+			'recipient_phone',
+			'Phone Number',
+			'required|numeric|min_length[10]|max_length[12]',
+			array(
+				'required' => 'Phone Number is required.',
+				'numeric' => 'Phone Number must contain only numbers.',
+				'min_length' => 'Phone Number must be at least 10 characters long.',
+				'max_length' => 'Phone Number cannot exceed 12 characters.'
+			)
+		);
+		
         $this->form_validation->set_rules('province_id', 'Provinsi', 'required');
         $this->form_validation->set_rules('city_id', 'Kota/Kabupaten', 'required');
         $this->form_validation->set_rules('district_id', 'Kecamatan', 'required');
@@ -317,7 +330,7 @@ class C_checkout extends CI_Controller {
             
             if($this->M_checkout->insert_shipping_address($data['shipping_address'])){
                 $this->session->set_flashdata('alertSuccess','Alamat Berhasil di Simpan!');
-                redirect('checkout/carts/');
+                redirect('checkout/');
             }
         }
     }
@@ -350,7 +363,7 @@ class C_checkout extends CI_Controller {
 					'address_id' => $this->session->flashdata('address_id'),
 					'quantity'   => $data['quantity'],
 					'price'      => $data['price'],
-					'status'     => 'process'
+					'status'     => 'waiting'
 				);
 
 				if($this->M_checkout->decrease_stock($data['product_id'], $data['quantity'])){
@@ -368,18 +381,42 @@ class C_checkout extends CI_Controller {
 		
 			if ($success) {
 				$this->session->set_flashdata('alertSuccess', 'Berhasil');
-                redirect('checkout/carts/');
+                redirect('checkout/');
 
 				
 			} else {
 				$this->session->set_flashdata('alertError', 'Terjadi kesalahan saat menyimpan detail pesanan!');
-                redirect('checkout/carts/');
+                redirect('checkout/');
 
 			}
 		}
 		
 	 }
         
+    }
+
+	
+	public function history() {
+
+		$data['orders'] = $this->M_checkout->history($this->session->userdata('userId'));
+		
+		// foreach(	$data['orders'] as &$order){
+		// 	$order['order_id_hash'] =  hash('sha256',$order['order_id']);
+		// }m
+		$data['name'] = $this->session->userdata('sellerName');
+		$data['email'] = $this->session->userdata('sellerEmail');
+
+		// var_dump(	$data['orders'] );
+		
+		
+		$data['title'] = "Seller Dashboard";
+		$this->load->view('template/header');
+        $this->load->view('page/home/header');
+        $this->load->view('components/ui/navbar_user');
+        $this->load->view('components/content/history_order',$data);
+        $this->load->view('components/ui/alert');
+        $this->load->view('page/home/footer');
+        $this->load->view('template/footer');
     }
 
         

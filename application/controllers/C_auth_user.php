@@ -56,7 +56,8 @@ class C_auth_user extends CI_Controller {
                     'isLogin' => true,
                     'role' => 'user',
                     'userId' => $data_user->user_id,
-                    'userEmail' =>$data_user->user_email
+                    'userEmail' =>$data_user->user_email,
+					
                 );
                 $this->session->set_userdata($userdata);
                 redirect('');
@@ -89,8 +90,8 @@ class C_auth_user extends CI_Controller {
     //     //     'smtp_timeout' => 10,
     //     //     'newline' => "\r\n",
     //     //     'smtp_debug' => 1,
-    //     //     'smtp_auto_tls' => false, // Add this line to prevent auto TLS verification
-    //     //     'smtp_validate_cert' => false // Add this line to disable SSL certificate validation
+    //     //     'smtp_auto_tls' => false, 
+    //     //     'smtp_validate_cert' => false 
     //     // );
 
     //     $config = array(

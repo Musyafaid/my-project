@@ -10,11 +10,11 @@
                         <form action="" method="POST">
                             <div class="mb-3">
                                 <label class="form-label">Email address</label>
-                                <input type="text" class="form-control" name="user_email" placeholder="name@example.com" required>
+                                <input type="text" class="form-control" name="admin_email" placeholder="name@example.com" required>
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
-                                <input type="password" class="form-control" name="user_password" placeholder="Enter your password" required>
+                                <input type="password" class="form-control" name="admin_password" placeholder="Enter your password" required>
                             </div>
                             <div class="mb-3 form-check">
                                 <input type="checkbox" class="form-check-input" id="rememberMe">
@@ -24,7 +24,7 @@
                                 <button type="submit" class="btn btn-primary">Login</button>
                             </div>
                             <div class="text-center mt-3">
-                                <a href="<?= base_url('user/register/') ?>" class="text-decoration-none">Don't have an account ? Click here..</a>
+                                <a href="<?= base_url('admin/register/') ?>" class="text-decoration-none">Don't have an account ? Click here..</a>
                             </div>
                         </form>
                     </div>

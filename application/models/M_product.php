@@ -109,9 +109,127 @@ class M_product extends CI_model {
         return $this->db->affected_rows();
     }
 
-    public function get_carts() {
+	public function order_table($seller_id = 9 ) { 
+		$query = $this->db->query("
+ 		SELECT 
+		order_table.order_id, 
+		product.product_name,
+		user.user_name,
+		SUM(order_detail.quantity * order_detail.price) AS total_price,
+		GROUP_CONCAT(order_detail.product_id) AS product_ids,
+		MAX(order_detail.status) AS latest_status,
+		product.seller_id
+		FROM order_table
+		INNER JOIN order_detail ON order_detail.order_id = order_table.order_id
+		INNER JOIN `user` ON user.user_id = order_table.user_id
+		INNER JOIN product ON product.product_id = order_detail.product_id
+		WHERE product.seller_id = ?
+		GROUP BY order_table.order_id, product.seller_id;
+		",array($seller_id));
+
+		return $result = $query->result_array();
+
+	}
+	public function order_await($seller_id  ) {
+		$query = $this->db->query("
+ 		SELECT 
+			order_table.order_id, 
+			user.user_name,
+			SUM(order_detail.quantity * order_detail.price) AS total_price,
+			GROUP_CONCAT(order_detail.product_id) AS product_ids,
+			MAX(order_detail.status) AS latest_status,
+			product.seller_id,
+			product.product_name
+		FROM order_table
+		INNER JOIN order_detail ON order_detail.order_id = order_table.order_id
+		INNER JOIN `user` ON user.user_id = order_table.user_id
+		INNER JOIN product ON product.product_id = order_detail.product_id
+		WHERE product.seller_id = ? AND order_detail.status = 'waiting'
+		GROUP BY order_table.order_id, product.seller_id, user.user_name
+		LIMIT 5;
+
+		",array($seller_id));
+
+		return $result = $query->result_array();
+
+	}
+
+	public function get_order_detail($order_id , $product_id) {
+		$query = $this->db->query("
+		SELECT product.*,order_detail.*, SUM(order_detail.price * order_detail.quantity) AS sub_total FROM product
+		INNER JOIN order_detail ON order_detail.product_id = product.product_id
+		WHERE order_detail.order_id = ? and order_detail.product_id = ?
+		",array($order_id,$product_id));
+
+		return $result = $query->result_array();
+	}
+	
+	public function get_address($order_id) {
+		
+		$query = $this->db->query("
+	
+		SELECT shipping_address.* FROM shipping_address
+		INNER JOIN order_detail ON order_detail.address_id = shipping_address.address_id
+		WHERE order_detail.order_id = ? ;
+	
+		",array($order_id));
+	
+		return $result = $query->result_array();
+	}
     
-    }
+	
+	public function update_order($order_id) {
+		$this->db->set('status','success');
+		$this->db->where('order_id',$order_id);
+		$this->db->update('order_detail');
+		return $this->db->affected_rows();
+	}
+	
+	public function all_sallary($id) {
+		$query = $this->db->query("
+		
+		SELECT 
+    	SUM(order_detail.quantity * order_detail.price) AS grand_total
+		FROM order_table
+		INNER JOIN order_detail ON order_detail.order_id = order_table.order_id
+		INNER JOIN product ON product.product_id = order_detail.product_id
+		WHERE product.seller_id = ?  AND order_detail.status = 'success';
+
+		
+		",array($id));
+		
+		return $result = $query->row();
+		
+	}
+	
+	public function count_succes_order($id) {
+		$query = $this->db->query("
+		
+		SELECT 
+		order_table.order_id, 
+		product.product_name,
+		user.user_name,
+		SUM(order_detail.quantity * order_detail.price) AS total_price,
+	
+		GROUP_CONCAT(order_detail.product_id) AS product_ids,
+		MAX(order_detail.status) AS latest_status,
+		product.seller_id
+		FROM order_table
+		INNER JOIN order_detail ON order_detail.order_id = order_table.order_id
+		INNER JOIN `user` ON user.user_id = order_table.user_id
+		INNER JOIN product ON product.product_id = order_detail.product_id
+		WHERE product.seller_id = ? AND order_detail.status = 'success'
+		GROUP BY order_table.order_id, product.seller_id, product.product_name, user.user_name;
+
+		
+			
+		",array($id));
+		
+		return $result = $query->num_rows();
+
+
+		
+	}
 }
 
 

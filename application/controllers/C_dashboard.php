@@ -10,15 +10,19 @@ class C_dashboard extends CI_Controller {
         $this->load->library('pagination');   
         $this->load->library('encryption');   
         $this->session->set_userdata('totalProduct',$this->M_product->count_all_by_id (null,$this->session->userdata('sellerId'))); 
-      
+		$this->session->set_userdata('totalSallary',$this->M_product->all_sallary($this->session->userdata('sellerId'))->grand_total); 
+		$this->session->set_userdata('totalSallaryItem',$this->M_product->count_succes_order($this->session->userdata('sellerId'))); 
         
     }
 
     public function index() {
-
-      
        
         $data['products'] = $this->M_product->get_products(5,0);
+		$data['orders'] = $this->M_product->order_await($this->session->userdata('sellerId'));
+		$data['name'] = $this->session->userdata('sellerName');
+		$data['email'] = $this->session->userdata('sellerEmail');
+
+	
 
         $data['title'] = "Seller Dashboard";
         $this->load->view('template/header');
@@ -26,7 +30,7 @@ class C_dashboard extends CI_Controller {
         $this->load->view('page/dashboard/header');
         $this->load->view('page/dashboard/index');
         $this->load->view('page/dashboard/dashboard');
-        $this->load->view('components/content/overview_product',$data);
+        $this->load->view('components/content/overview_order',$data);
         $this->load->view('page/dashboard/footer');
         $this->load->view('components/ui/number_animation');
         $this->load->view('components/ui/alert');
@@ -136,6 +140,8 @@ class C_dashboard extends CI_Controller {
 
             $this->session->set_userdata('offset',$offset);
             $data['pagination'] = $this->pagination->create_links();
+			$data['name'] = $this->session->userdata('sellerName');
+			$data['email'] = $this->session->userdata('sellerEmail');
             
             $data['title'] = "Seller Dashboard";
             
@@ -244,7 +250,7 @@ class C_dashboard extends CI_Controller {
         
         
         if($this->M_product->update_product($product_id,$data_product)){
-            var_dump($data_product);
+            // var_dump($data_product);
             $this->session->set_flashdata('alertSuccess','Data successfuly update to database');
             redirect('dashboard/product/');
         }else{
@@ -282,7 +288,7 @@ class C_dashboard extends CI_Controller {
 
         $result = $this->M_product->update_status($product_id,$status);
         if($result){
-            $this->session->set_flashdata('alertSuccess', 'Product Updated! ');
+            $this->session->set_flashdata('alertgs', 'Product Updated! ');
             redirect('dashboard/product/');
         }else{
             $this->session->set_flashdata('alertSuccess', 'Product Failed Updated! ');
@@ -290,6 +296,95 @@ class C_dashboard extends CI_Controller {
             
         }
     }
+
+	public function order_table() {
+
+		$data['orders'] = $this->M_product->order_table($this->session->userdata('sellerId'));
+		
+		foreach($data['orders'] as &$order){
+			$order['order_id_hash'] =  hash('sha256',$order['order_id']);
+		}
+		$data['name'] = $this->session->userdata('sellerName');
+		$data['email'] = $this->session->userdata('sellerEmail');
+
+		
+		
+		
+		$data['title'] = "Seller Dashboard";
+        $this->load->view('template/header');
+        $this->load->view('components/ui/sidebar',$data);
+        $this->load->view('page/dashboard/header');
+        $this->load->view('page/dashboard/index');
+        $this->load->view('page/dashboard/dashboard');
+		$this->load->view('page/dashboard/order_table',$data);
+        $this->load->view('page/dashboard/footer');
+        $this->load->view('components/ui/number_animation');
+        $this->load->view('components/ui/alert');
+        $this->load->view('template/footer');
+    }
+	
+	public function order_detail($order_id_hash) {
+		$data['title'] = "Seller Dashboard";
+		$data['orders'] = $this->M_product->order_table($this->session->userdata('sellerId'));
+	
+		$found = false; 
+		foreach ($data['orders'] as &$order) {
+			$order['order_id_hash'] = hash('sha256', $order['order_id']);
+			
+			if ($order_id_hash === $order['order_id_hash']) {
+				$found = true;
+				
+				$product_ids = $order['product_ids']; 
+				$product_id_array = explode(',', $product_ids); 
+	
+				$order_details = [];
+				foreach ($product_id_array as $product_id) {
+					$order_details[] = $this->M_product->get_order_detail($order['order_id'], $product_id); // Simpan hasil ke array
+				}
+				$shipping_address = $this->M_product->get_address($order['order_id']);
+				$data['name'] = $this->session->userdata('sellerName');
+				$data['email'] = $this->session->userdata('sellerEmail');
+
+				$data['shipping_address'] = $shipping_address;
+				$data['order_match'] = $order;
+				$data['order_details'] = $order_details; 
+				// var_dump($data['order_details']);
+
+				$this->load->view('template/header');
+				$this->load->view('components/ui/sidebar', $data);
+				$this->load->view('page/dashboard/header');
+				$this->load->view('page/dashboard/order_detail', $data);
+				$this->load->view('page/dashboard/footer');
+				$this->load->view('components/ui/number_animation');
+				$this->load->view('components/ui/alert');
+				$this->load->view('template/footer');
+			}
+		}
+
+
+	
+	
+	
+		if (!$found) {
+			echo "Order not found!";
+		}
+	}
+	
+	
+	public function confirmation($id) {
+		echo("hello");
+		if(!$id){
+			redirect('dashboard/');
+		}else{
+			if($this->M_product->update_order($id)){
+				redirect('dashboard/order');
+			}
+		}
+
+	}
+
+	
+	
 
 
 

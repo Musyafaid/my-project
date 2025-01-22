@@ -8,9 +8,8 @@
                 </button>
             </div>
             
-            <!-- Search Bar -->
             <div class="col-lg-6 d-none d-lg-block">
-                <form class="d-flex" action="" method="get">
+                <form class="d-flex" action="<?= base_url('home') ?>" method="get">
                     <div class="input-group">
                         <input type="text" class="form-control" name="search" placeholder="Cari produk...">
                         <button class="btn btn-outline-secondary" type="submit">
@@ -20,22 +19,38 @@
                 </form>
             </div>
 
-            <!-- Cart & User -->
-            <div class="" >
+
+			<?php if($this->session->userdata('isLogin') && $this->session->userdata('userId')) :  ?>
+				<div class="" >
+					<ul class="navbar-nav ms-auto">
+						<li class="nav-item">
+							<a class="nav-link" href="<?= base_url('checkout/') ?>">
+								<i class="fas fa-shopping-cart"></i>
+								<span class="badge bg-danger rounded-pill"><?= $this->session->userdata('userCarts') ?></span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="<?= base_url('checkout/history') ?>">
+								history
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="<?= base_url('user/logout')?>" >Logout</a>
+						</li>
+						
+					</ul>
+				</div>
+			<?php else : ?>
+			<div class="" >
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="<?= base_url('checkout/carts/') ?>">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span class="badge bg-danger rounded-pill">2</span>
-                        </a>
+                        <a class="nav-link" href="<?= base_url('user/login')?>" >Masuk</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Masuk</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="btn btn-outline-dark btn-sm mt-1" href="#">Daftar</a>
+                        <a class="btn btn-outline-dark btn-sm mt-1" href="<?= base_url('user/register')?>" >Daftar</a>
                     </li>
                 </ul>
             </div>
+			<?php endif ; ?>
         </div>
     </nav>

@@ -18,11 +18,9 @@ class C_auth_seller extends CI_Controller {
         
 
     public function seller_register() {
-        // $data['title'] = "Seller Register";
         
         
         $data = $this->input->post();
-        // $data['title'] = 'Seller Register';
             $this->load->view('template/header');
             $this->load->view('components/ui/register',$data);
             $this->load->view('components/ui/alert');
@@ -91,8 +89,8 @@ class C_auth_seller extends CI_Controller {
     //     //     'smtp_timeout' => 10,
     //     //     'newline' => "\r\n",
     //     //     'smtp_debug' => 1,
-    //     //     'smtp_auto_tls' => false, // Add this line to prevent auto TLS verification
-    //     //     'smtp_validate_cert' => false // Add this line to disable SSL certificate validation
+    //     //     'smtp_auto_tls' => false,
+    //     //     'smtp_validate_cert' => false 
     //     // );
 
     //     $config = array(
@@ -129,5 +127,104 @@ class C_auth_seller extends CI_Controller {
     // }
 
    
+	
+	public function send() {
+		$config = array(
+			'protocol' => 'smtp',
+			'smtp_host' => 'smtp.gmail.com',
+			'smtp_port' => 587,
+			'smtp_user' => 'examplestoreproject@gmail.com',
+			'smtp_pass' => 'phtq cpym iigj twuo', 
+			'mailtype'  => 'html',
+			'charset'   => 'utf-8',
+			'newline'   => "\r\n",
+			'smtp_crypto' => 'tls' 
+		);
+		
+		$this->email->initialize($config); 
+		$verification_code = "8881988";
+		$email = "musyafaachmaad@gmail.com";
+		
+		$this->email->from('examplestoreproject@gmail.com', 'My Store');
+		$this->email->to($email);
+		
+		$verification_link = site_url('C_user/verify_email/register/' . urlencode($email) . '/' . urlencode($verification_code));
+		
+		$subject = 'Email verification';
+		$message = '
+		<html>
+		<head>
+			<style>
+				body {
+					font-family: Arial, sans-serif;
+					color: #333;
+					margin: 0;
+					padding: 0;
+				}
+				.container {
+					width: 80%;
+					margin: 0 auto;
+					padding: 20px;
+					background-color: #f4f4f4;
+					border-radius: 8px;
+					box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+				}
+				.header {
+					background-color: #548CA8;
+					color: #fff;
+					padding: 10px;
+					border-radius: 8px 8px 0 0;
+					text-align: center;
+				}
+				.content {
+					padding: 20px;
+					text-align: center;
+				}
+				.footer {
+					background-color: #334257;
+					color: #fff;
+					text-align: center;
+					padding: 10px;
+					border-radius: 0 0 8px 8px;
+				}
+				a {
+					color: #548CA8;
+					text-decoration: none;
+					font-weight: bold;
+				}
+				a:hover {
+					text-decoration: underline;
+				}
+			</style>
+		</head>
+		<body>
+			<div class="container">
+				<div class="header">
+					<h1>Email Verification</h1>
+				</div>
+				<div class="content">
+					<p>Dear User,</p>
+					<p>This your verification email</p>
+					<p><a href="' . $verification_link . '">Verify Email</a></p>
+					<p>If you did not request this, please ignore this email.</p>
+				</div>
+				<div class="footer">
+					<p>&copy; 2024 My Store. All rights reserved.</p>
+				</div>
+			</div>
+		</body>
+		</html>';
+	
+		$this->email->subject($subject);
+		$this->email->message($message);
+		
+		if ($this->email->send()) {
+			return true;
+		} else {
+			log_message('error', $this->email->print_debugger());
+			return false;
+		}
+	}
 
-}
+}	
+

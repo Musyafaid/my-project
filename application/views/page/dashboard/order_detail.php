@@ -5,7 +5,7 @@
 			<div class="shadow rounded p-4 mb-4 bg-white border">
 				<h4 class="border-bottom pb-3 mb-4">Order Summary</h4>
 				<?php
-				$total_price = 0; // Inisialisasi total harga
+				$total_price = 0; 
 				?>
 
 				<?php foreach ($order_details as $products): ?>
@@ -36,23 +36,21 @@
 									</span>
 								</div>
 							</div>
-							<div class="text-end">
+							<!-- <div class="text-end">
 								<p class="text-muted mb-1">Total Amount</p>
 								<h4 class="text-primary mb-0">Rp. <?= number_format($item['sub_total'], 0, ',', '.') ?></h4>
-							</div>
+							</div> -->
 						</div>
 
 					<?php endforeach; ?>
 				<?php endforeach; ?>
 
-				<!-- Tampilkan total harga setelah loop -->
 				<div class="text-end">
 					<p class="text-muted mb-1">Total Ammount</p>
 					<h4 class="text-primary mb-0">Rp. <?= number_format($total_price, 0, ',', '.') ?></h4>
 				</div>
 			</div>
 
-			<!-- Rest in Accordion -->
 			<div class="accordion" id="orderAccordion">
 				<!-- Customer Details -->
 				<!-- <div class="accordion-item">
@@ -115,12 +113,12 @@
 			<div class="mt-4 text-center">
 				<?php foreach ($order_details as $products): ?>
 					<?php
+
 					$firstItem = reset($products);
+					
 					?>
-
-
 					<?php foreach ($products as $item): ?>
-						<?php if ($item['status'] !== 'succes'): ?>
+						<?php if ($item['status'] !== 'success'): ?>
 							<?php if ($item['order_id'] == $firstItem['order_id']): ?>
 								<a href="<?= base_url('dashboard/confirmation/') . $item['order_id'] ?>"
 									class="btn btn-success btn-lg me-2 px-4">

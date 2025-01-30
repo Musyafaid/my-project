@@ -87,43 +87,58 @@ class C_checkout extends CI_Controller {
     }
 
 
-    public function update_carts() {
-        $input_id = $this->input->get('increment') ?: $this->input->get('decrement');
-        
-        $data['products'] = $this->M_checkout->get_all_carts_by_id($this->session->userdata('userId'));
-    
-        $found = false;
-        $carts_id = null;
-        
-        foreach ($data['products'] as $product) {
-            $product['cart_items_id_hash'] = hash('sha256', $product['cart_items_id']);
-            if ($product['cart_items_id_hash'] === $input_id) {
-                $carts_id = $product['cart_items_id'];
-                $found = true;
-                break;
-            }
-        }
-    
-        if ($found) {
-            if ($this->input->get('increment')) {
-                $success = $this->M_checkout->increment($carts_id);
-            } else {
-                $success = $this->M_checkout->decrement($carts_id);
-            }
-    
-            if ($success) {
-                $this->session->set_flashdata('alertSuccess', 'Update success');
-            } else {
-                $this->session->set_flashdata('alertError', 'Update failed');
-            }
-            
-            redirect('checkout/');
-        } else {
-            $this->session->set_flashdata('alertError', 'Cart item not found');
-            redirect('checkout/');
-        }
-    }
-    
+	public function update_carts() {
+		$input_id = $this->input->get('increment') ?: $this->input->get('decrement');
+		$data['products'] = $this->M_checkout->get_all_carts_by_id($this->session->userdata('userId'));
+		
+		$found = false;
+		$carts_id = null;
+		$current_quantity = 0;
+		$stock = 0;
+		
+		foreach ($data['products'] as $product) {
+			$product['cart_items_id_hash'] = hash('sha256', $product['cart_items_id']);
+			if ($product['cart_items_id_hash'] === $input_id) {
+				$carts_id = $product['cart_items_id'];
+				$current_quantity = $product['quantity'];
+				$stock = $product['product_stock'];
+				$found = true;
+				break;
+			}
+		}
+		
+		if ($found) {
+			if ($this->input->get('increment')) {
+				if ($current_quantity < $stock) {
+					$success = $this->M_checkout->increment($carts_id);
+					if ($success) {
+						$this->session->set_flashdata('alertSuccess', 'Update success');
+					} else {
+						$this->session->set_flashdata('alertError', 'Update failed');
+					}
+				} else {
+					$this->session->set_flashdata('alertError', 'Quantity cannot exceed stock');
+				}
+			} elseif ($this->input->get('decrement')) {
+				if ($current_quantity > 1) {
+					$success = $this->M_checkout->decrement($carts_id);
+					if ($success) {
+						$this->session->set_flashdata('alertSuccess', 'Update success');
+					} else {
+						$this->session->set_flashdata('alertError', 'Update failed');
+					}
+				} else {
+					$this->session->set_flashdata('alertError', 'Minimum quantity is 1');
+				}
+			}
+			
+			redirect('checkout/');
+		} else {
+			$this->session->set_flashdata('alertError', 'Cart item not found');
+			redirect('checkout/');
+		}
+	}
+	
 
 
     public function remove_carts() {
@@ -262,7 +277,6 @@ class C_checkout extends CI_Controller {
 				if( empty($customer_details)){
 					redirect('checkout/');
 				}
-				// var_dump($transaction_data);
                 $data['snapToken'] = $snapToken;
                 $this->load->view('checkout_snap', $data);
 				$this->index();
@@ -402,11 +416,10 @@ class C_checkout extends CI_Controller {
 		
 		// foreach(	$data['orders'] as &$order){
 		// 	$order['order_id_hash'] =  hash('sha256',$order['order_id']);
-		// }m
+		// }
 		$data['name'] = $this->session->userdata('sellerName');
 		$data['email'] = $this->session->userdata('sellerEmail');
 
-		// var_dump(	$data['orders'] );
 		
 		
 		$data['title'] = "Seller Dashboard";

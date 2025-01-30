@@ -43,12 +43,10 @@ class C_admin_dashboard extends CI_Controller {
 	public function category() {
 		$this->load->library('pagination');
 	
-		// Reset pencarian
 		if ($this->input->get('reset') == 'reset') {
 			$this->session->set_userdata('search', '');
 			$search = '';
 		} else {
-			// Ambil nilai pencarian
 			$search = $this->input->get('search');
 			if ($search !== null) {
 				$this->session->set_userdata('search', $search);
@@ -57,14 +55,12 @@ class C_admin_dashboard extends CI_Controller {
 			}
 		}
 	
-		// Konfigurasi Pagination
 		$config['base_url'] = base_url('admin/dashboard/category');
-		$config['total_rows'] = $this->M_admin->count_all_categories($search); // Hitung jumlah hasil
-		$config['per_page'] = 5; // Jumlah item per halaman
-		$config['page_query_string'] = TRUE; // Gunakan query string
-		$config['query_string_segment'] = 'page'; // Segmen query string untuk pagination
-	
-		// Styling Pagination
+		$config['total_rows'] = $this->M_admin->count_all_categories($search); 
+		$config['per_page'] = 5; 
+		$config['page_query_string'] = TRUE; 
+		$config['query_string_segment'] = 'page'; 	
+		
 		$config['full_tag_open'] = '<nav><ul class="pagination justify-content-center">';
 		$config['full_tag_close'] = '</ul></nav>';
 		$config['num_tag_open'] = '<li class="page-item">';
@@ -79,17 +75,17 @@ class C_admin_dashboard extends CI_Controller {
 	
 		$this->pagination->initialize($config);
 	
-		// Ambil halaman saat ini
+		
 		$page = $this->input->get('page') ? (int)$this->input->get('page') : 0;
 	
-		// Ambil data dari model
+		
 		$data['categories'] = $this->M_admin->get_categories_with_search_and_pagination($search, $config['per_page'], $page);
 		$data['pagination'] = $this->pagination->create_links();
-		$data['search'] = $search; // Kirim nilai pencarian ke view
+		$data['search'] = $search; 
 		$data['name'] = $this->session->userdata('adminName');
 		$data['email'] = $this->session->userdata('adminEmail');
 	
-		// Load views
+		
 		$this->load->view('template/header');
 		$this->load->view('components/ui/sidebar', $data);
 		$this->load->view('components/content/table_category', $data);
@@ -162,7 +158,7 @@ class C_admin_dashboard extends CI_Controller {
 			echo "Gagal mendapatkan category";
 		}
 		
-		// var_dump($data['categories']);
+		
 		
 		
 		if ($this->input->get('reset') == 'reset') {
@@ -178,10 +174,10 @@ class C_admin_dashboard extends CI_Controller {
 		}
 		
 		$config['base_url'] = base_url('admin/dashboard/sub_category');
-		$config['total_rows'] = $this->M_admin->count_all_sub_categories($search); // Hitung jumlah hasil
-		$config['per_page'] = 5; // Jumlah item per halaman
-		$config['page_query_string'] = TRUE; // Gunakan query string
-		$config['query_string_segment'] = 'page'; // Segmen query string untuk pagination
+		$config['total_rows'] = $this->M_admin->count_all_sub_categories($search); 
+		$config['per_page'] = 5; 
+		$config['page_query_string'] = TRUE; 
+		$config['query_string_segment'] = 'page'; 
 		
 		$config['full_tag_open'] = '<nav><ul class="pagination justify-content-center">';
 		$config['full_tag_close'] = '</ul></nav>';

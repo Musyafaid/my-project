@@ -16,7 +16,8 @@ class C_dashboard extends CI_Controller {
     }
 
     public function index() {
-       
+		$data['years'] = $this->M_product->sallary_year($this->session->userdata('sellerId'));
+		$salary = $this->M_product->sallary_recap($this->session->userdata('sellerId'));
         $data['products'] = $this->M_product->get_products(5,0);
 		$data['orders'] = $this->M_product->order_await($this->session->userdata('sellerId'));
 		$data['name'] = $this->session->userdata('sellerName');
@@ -293,7 +294,6 @@ class C_dashboard extends CI_Controller {
         }else{
             $this->session->set_flashdata('alertSuccess', 'Product Failed Updated! ');
             redirect('dashboard/product/');
-            
         }
     }
 
@@ -383,8 +383,31 @@ class C_dashboard extends CI_Controller {
 
 	}
 
+
+	public function data_sallary_recap() {
+		$year = $this->input->get('year');
+		$salary = $this->M_product->sallary_recap($this->session->userdata('sellerId'),$year);
+
+		foreach($salary as &$item) {
+	
+			$date = DateTime::createFromFormat('!m', $item['month']);  
+			$monthName = $date->format('F');  
+			
+			$item['month'] = $monthName; 
+		} 
+		header('Content-Type: application/json');
+        echo json_encode($salary);
+	}
+	
+	public function sallary_recap() {
+		$data['years'] = $this->M_product->sallary_year($this->session->userdata('sellerId'));
+		$salary = $this->M_product->sallary_recap($this->session->userdata('sellerId'));
+		$this->load->view('page/dashboard/chart',$data);
+	}
+
 	
 	
+
 
 
 

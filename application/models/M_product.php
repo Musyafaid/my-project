@@ -124,7 +124,7 @@ class M_product extends CI_model {
 		INNER JOIN `user` ON user.user_id = order_table.user_id
 		INNER JOIN product ON product.product_id = order_detail.product_id
 		WHERE product.seller_id = ?
-		GROUP BY order_table.order_id, product.seller_id;
+		GROUP BY order_table.order_id DESC ;
 		",array($seller_id));
 
 		return $result = $query->result_array();
@@ -146,7 +146,7 @@ class M_product extends CI_model {
 		INNER JOIN product ON product.product_id = order_detail.product_id
 		WHERE product.seller_id = ? AND order_detail.status = 'waiting'
 		GROUP BY order_table.order_id, product.seller_id, user.user_name
-		LIMIT 5;
+		LIMIT 5  ;
 
 		",array($seller_id));
 
@@ -230,6 +230,57 @@ class M_product extends CI_model {
 
 		
 	}
+
+	public function sallary_recap($seller_id, $year = null) {
+		$sql = "
+			SELECT 
+				MONTH(order_table.created_at) AS `month`, 
+				YEAR(order_table.created_at) AS `year`,  
+				COUNT(*) AS total_order,
+				SUM(order_detail.quantity * order_detail.price ) AS total_sallary
+			FROM order_table
+			INNER JOIN order_detail ON order_detail.order_id = order_table.order_id
+			INNER JOIN `user` ON user.user_id = order_table.user_id
+			INNER JOIN product ON product.product_id = order_detail.product_id
+			WHERE product.seller_id = ? AND order_detail.status = 'success'
+		";
+	
+		if ($year) {
+			$sql .= " AND YEAR(order_table.created_at) = ?";
+		}
+	
+		$sql .= " 
+			GROUP BY MONTH(order_table.created_at), YEAR(order_table.created_at)
+			ORDER BY `year`, `month`
+		";
+	
+		$params = [$seller_id];
+		if ($year) {
+			$params[] = $year;
+		}
+	
+		$query = $this->db->query($sql, $params);
+	
+		return $query->result_array();
+	}
+	public function sallary_year($seller_id) {
+		$sql = "
+			SELECT 
+				YEAR(order_table.created_at) AS `year`
+			FROM order_table
+			INNER JOIN order_detail ON order_detail.order_id = order_table.order_id
+			INNER JOIN `user` ON user.user_id = order_table.user_id
+			INNER JOIN product ON product.product_id = order_detail.product_id
+			WHERE product.seller_id = ? AND order_detail.status = 'success'
+			GROUP BY year ;
+		";
+	
+		$query = $this->db->query($sql,array($seller_id));
+	
+		return $query->result_array();
+	}
+	
+
 }
 
 

@@ -34,6 +34,7 @@ class M_checkout extends CI_model {
                 SUM(cart_items.quantity * cart_items.price) AS total_price,
                 product.product_name,
                 product.product_id,
+                product.product_stock,
                 product.product_image,
                 product.description,
                 seller.shop_name
@@ -185,7 +186,7 @@ class M_checkout extends CI_model {
 		INNER JOIN product ON product.product_id = order_detail.product_id
 		INNER JOIN seller ON seller.seller_id = product.seller_id
 		WHERE order_table.user_id = ?
-		GROUP BY order_table.order_id, product.seller_id;
+		GROUP BY order_table.order_id DESC;
 		",array($user_id));
 
 		return $result = $query->result_array();

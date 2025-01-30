@@ -69,6 +69,8 @@ $route['home/(:num)'] = 'C_home/index/$1';
 $route['home'] = 'C_home/index';
 $route['home/product'] = 'C_product/search';
 $route['home/product/detail'] = 'C_home/detail_product';
+$route['dashboard/data_sallary'] = 'C_dashboard/data_sallary_recap';
+
 
 
 

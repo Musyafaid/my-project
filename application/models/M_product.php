@@ -109,7 +109,7 @@ class M_product extends CI_model {
         return $this->db->affected_rows();
     }
 
-	public function order_table($seller_id = 9 ) { 
+	public function order_table($seller_id  ) { 
 		$query = $this->db->query("
  		SELECT 
 		order_table.order_id, 
